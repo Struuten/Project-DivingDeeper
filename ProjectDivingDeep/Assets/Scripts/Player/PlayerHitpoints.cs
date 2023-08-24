@@ -13,6 +13,7 @@ public class PlayerHitpoints : MonoBehaviour
         {
             Debug.Log("Dieeee");
         }
+        Debug.Log("Hitpoints left: " + hitpoints);
     }
 
     private void OnCollisionEnter2D(Collision2D collision)
