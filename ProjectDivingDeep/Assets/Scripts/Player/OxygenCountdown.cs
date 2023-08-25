@@ -8,6 +8,7 @@ public class OxygenCountdown : MonoBehaviour
 {
     [SerializeField] float oxygenTime;
     [SerializeField] TextMeshProUGUI oxygenText;
+    [SerializeField] Canvas doneCanvas;
 
     // Start is called before the first frame update
     void Start()
@@ -25,5 +26,10 @@ public class OxygenCountdown : MonoBehaviour
     {
         oxygenTime -= Time.deltaTime;
         oxygenText.text = MathF.Ceiling(oxygenTime).ToString();
+        if(oxygenTime <= 0)
+        {
+            Time.timeScale = 0;
+            doneCanvas.gameObject.SetActive(true);
+        }
     }
 }

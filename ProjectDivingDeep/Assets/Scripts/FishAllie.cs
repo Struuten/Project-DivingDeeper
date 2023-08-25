@@ -8,54 +8,57 @@ public class FishAllie : MonoBehaviour
     [SerializeField] Transform attachPoint;
     [SerializeField] float swimingSpeed;
     [SerializeField] float idleSwimingSpeed;
+    [SerializeField] float beginSwimDistance;
 
     PlayerMovmet playerMovmet;
     PlayerHitpoints playerHitpoints;
+    GameObject player;
 
-    bool idle = true;
+    bool idleSwiming = true;
+    bool isRiding = false;
+
+    private void Start()
+    {
+        player = FindObjectOfType<PlayerMovmet>().gameObject;
+
+        playerMovmet = player.GetComponent<PlayerMovmet>();
+        playerHitpoints = player.GetComponent<PlayerHitpoints>();
+    }
+
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        Debug.Log("Trigger");
         if (collision.tag == "Player")
         {
-            playerMovmet = collision.GetComponent<PlayerMovmet>();
-            playerHitpoints = collision.GetComponent<PlayerHitpoints>();
-
             playerMovmet.SetSwimingSpeed(swimingSpeed);
 
             collision.transform.position = attachPoint.position;
             transform.SetParent(collision.transform, true);
 
-            idle = false;
+            idleSwiming = false;
+            isRiding = true;
         }
-        else if (!idle && collision.tag == "Allie")
+        else if (isRiding && collision.tag == "Allie" || collision.tag == "Player")
         {
             Destroy(gameObject);
         }
-        else if (idle && collision.tag == "Allie")
+        else if (!isRiding && collision.tag == "Allie" && collision.transform.parent.tag == "Player")
         {
-            Transform player;
-
-            player = collision.transform.parent;
-
-            playerMovmet = player.GetComponent<PlayerMovmet>();
-            playerHitpoints = player.GetComponent <PlayerHitpoints>();
-
             playerMovmet.SetSwimingSpeed(swimingSpeed);
             player.transform.position = attachPoint.position;
             transform.SetParent (player.transform, true);
 
-            idle = false;
+            idleSwiming = false;
+            isRiding = true;
         }
         else
         {
-            if (playerMovmet != null)
+            if (transform.parent != null && transform.parent.tag == "Player")
             {
                 playerMovmet.ResetSwimingSpeed();
                 playerHitpoints.TakeDamage();
             }
 
-            if (collision.tag == "Obstacle" && !idle)
+            if (collision.tag == "Obstacle" && !idleSwiming || collision.tag == "Enemy" && !idleSwiming)
             {
                 Destroy(collision.gameObject);
             }
@@ -64,17 +67,27 @@ public class FishAllie : MonoBehaviour
 
     }
 
+    
+
     void Update()
     {
         IdleSwim();
     }
 
+
+
     private void IdleSwim()
     {
-        if (idle)
+        if (idleSwiming && Vector2.Distance(transform.position, player.transform.position) <= beginSwimDistance)
         {
             transform.Translate(0, -MathF.Abs(idleSwimingSpeed * Time.deltaTime), 0);
         }
         return;
+    }
+
+    private void OnDrawGizmosSelected()
+    {
+        Gizmos.color = Color.red;
+        Gizmos.DrawWireSphere(transform.position, beginSwimDistance);
     }
 }
