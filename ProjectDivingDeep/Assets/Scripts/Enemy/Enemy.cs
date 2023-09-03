@@ -20,8 +20,6 @@ public class Enemy : MonoBehaviour
     {
         if (collision.gameObject.tag == "Player")
         {
-            collision.gameObject.GetComponent<PlayerHitpoints>().TakeDamage();
-
             Destroy(gameObject);
         }
 
@@ -56,6 +54,7 @@ public class Enemy : MonoBehaviour
             }
             if (goingBack)
             {
+                transform.localScale = new Vector3(1, -1, 1);
                 while (travelPercent < 1f)
                 {
                     travelPercent += Time.deltaTime * routeSpeed;

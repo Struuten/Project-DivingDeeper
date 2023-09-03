@@ -9,6 +9,7 @@ public class PlayerHitpoints : MonoBehaviour
     [SerializeField] Canvas dieCanvas;
     int hitpoints = 2;
 
+    bool isAttached = false;
 
     public void TakeDamage()
     {
@@ -27,6 +28,7 @@ public class PlayerHitpoints : MonoBehaviour
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
+        if (isAttached) return;
         TakeDamage();
         
         if (collision.transform.tag == "Obstacle")

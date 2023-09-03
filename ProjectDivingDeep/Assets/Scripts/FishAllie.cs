@@ -56,6 +56,7 @@ public class FishAllie : MonoBehaviour
             {
                 playerMovmet.ResetSwimingSpeed();
                 playerHitpoints.TakeDamage();
+
             }
 
             if (collision.tag == "Obstacle" && !idleSwiming || collision.tag == "Enemy" && !idleSwiming)
