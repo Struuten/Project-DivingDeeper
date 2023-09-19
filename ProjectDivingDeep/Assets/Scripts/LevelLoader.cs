@@ -17,6 +17,13 @@ public class LevelLoader : MonoBehaviour
         Time.timeScale = 1.0f;
     }
 
+    public void LoadNextLevel()
+    {
+        int currentSceneIndex = SceneManager.GetActiveScene().buildIndex + 1;
+        SceneManager.LoadScene(currentSceneIndex);
+        Time.timeScale = 1.0f;
+    }
+
     public void Quit()
     {
         Application.Quit();
